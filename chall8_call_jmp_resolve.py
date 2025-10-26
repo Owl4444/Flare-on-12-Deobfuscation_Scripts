@@ -357,6 +357,7 @@ def emulate_to_tail_jump(u: Uc, start_addr: int, stop_addr: int, zf=None):
     out = {"rax": None}
     # Set up hooks for code execution
     def on_code(emu, address, size, user):
+        # print(f"Emulating instruction at {address:#x}, size={size}")
         if address == stop_addr:
             out["rax"] = emu.reg_read(UC_X86_REG_RAX)
             emu.emu_stop()
@@ -440,7 +441,7 @@ def write_rel32_jz(bv, at, target):
 
 bv:BinaryView = bv
 funcs = [current_function]
-LOOKBACK_INSNS = 4 # excluding call 
+LOOKBACK_INSNS = 5 # excluding call 
 llil_func = None
 
 for f in funcs:
@@ -474,6 +475,7 @@ for f in funcs:
 ## Get to the current Basic Block
 
 found_tail_jump = False
+tailcall_llil_window = []
 
 bb = next((b for b in current_function.basic_blocks if b.start <= here <= b.end), None)
 if bb is not None:
@@ -495,7 +497,7 @@ if not found_tail_jump:
     #raise SystemExit()
 else:
 
-    tailcall_llil_window = []
+    
     offset_from_start_of_bb = 0
 
     # Get current basic block
@@ -633,7 +635,7 @@ else:
             ## so do this 0only if we fail to look for conditional (setcc) pattern
             print(f"LLIL Instruction  {il}")
             pointer_value = load_from_const_pointer(bv, il)
-            print(f"Pointer Value: {pointer_value}")
+            print(f"[DEBUG] -----> Pointer Value: {pointer_value}")
             if pointer_value is not None:
                 found_unconditional_jump_emu_start = True
                 tailcall_window_start_addr = il.address
