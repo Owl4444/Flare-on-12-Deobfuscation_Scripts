@@ -395,7 +395,7 @@ def set_condition_cmp_setcc(bv:BinaryView, il):
         s = il.src
         if s.operation == LowLevelILOperation.LLIL_CMP_NE or s.operation == LowLevelILOperation.LLIL_CMP_E or s.operation == LowLevelILOperation.LLIL_CMP_SLT or s.operation == LowLevelILOperation.LLIL_CMP_SLE or s.operation == LowLevelILOperation.LLIL_CMP_SGT or s.operation == LowLevelILOperation.LLIL_CMP_SGE:
             print(f"Found CMP_NE at {hex(il.address)}")
-            bv.set_comment_at(il.address, "CMP_NE detected here")
+            bv.set_comment_at(il.address, "CMP detected here")
             return True
     return False
 
